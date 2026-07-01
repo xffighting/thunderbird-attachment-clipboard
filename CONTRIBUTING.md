@@ -20,7 +20,7 @@ documentation fixes, and platform bring-up (Windows, Linux).
 
 ```bash
 # 1.  Build the helper once
-git clone https://github.com/EXAMPLE/thunderbird-attachment-clipboard.git
+git clone https://github.com/xffighting/thunderbird-attachment-clipboard.git
 cd thunderbird-attachment-clipboard
 ./native-host/macos/install.sh
 
@@ -64,7 +64,7 @@ We currently accept entries for the following paste targets:
 ## First time contributors
 
 Look for issues labelled
-[`good first issue`](https://github.com/EXAMPLE/thunderbird-attachment-clipboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
+[`good first issue`](https://github.com/xffighting/thunderbird-attachment-clipboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
 Mentors will pair-review your PR.
 
 ## Release process

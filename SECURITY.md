@@ -39,7 +39,7 @@ We aim to:
 
 - We will not silently fix. We publish a CVE-compatible note on
   resolution in the relevant GitHub Security Advisory
-  (`https://github.com/EXAMPLE/thunderbird-attachment-clipboard/security/advisories`).
+  (`https://github.com/xffighting/thunderbird-attachment-clipboard/security/advisories`).
 - We will not request that you disable security features.
 
 ## Threat model

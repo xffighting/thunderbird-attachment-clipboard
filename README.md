@@ -1,12 +1,14 @@
 # AttachClip for Thunderbird
 
+![Banner](docs/img/readme-banner.svg)
+
 > Right-click any email attachment → choose **Copy Attachment as File** →
 > **Cmd+V** into Finder, WeChat, DingTalk, Lark, Slack, or a new email.
 
 [![macOS first](https://img.shields.io/badge/platform-macOS-blue)](#-installation)
 [![Thunderbird 128+](https://img.shields.io/badge/thunderbird-128%2B-orange)](#-installation)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Version: 0.1.0-alpha.1](https://img.shields.io/badge/version-0.1.0--alpha.1-red)](CHANGELOG.md)
+[![Version: 0.1.0-alpha.2](https://img.shields.io/badge/version-0.1.0--alpha.2-red)](CHANGELOG.md)
 [![No telemetry](https://img.shields.io/badge/telemetry-none-brightgreen)](PRIVACY.md)
 
 ---
@@ -63,7 +65,7 @@ Read the [full privacy statement](PRIVACY.md).
 ### One-shot install
 
 ```bash
-git clone https://github.com/EXAMPLE/thunderbird-attachment-clipboard.git
+git clone https://github.com/xffighting/thunderbird-attachment-clipboard.git
 cd thunderbird-attachment-clipboard/native-host/macos
 ./install.sh                       # builds helper via Swift Package Manager
 ```

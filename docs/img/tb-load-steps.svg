@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 760" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fafdfd"/>
+      <stop offset="1" stop-color="#e8f4f4"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f4fafa"/>
+    </linearGradient>
+    <linearGradient id="ok" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a8c8c"/>
+      <stop offset="1" stop-color="#0f5c5c"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a8c8c"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="1100" height="760" fill="url(#bg)"/>
+  <text x="550" y="42" font-size="26" font-weight="700" text-anchor="middle" fill="#0f3d3d">Loading AttachClip into Thunderbird 128+</text>
+  <text x="550" y="66" font-size="14" text-anchor="middle" fill="#5a7d7d">8 steps · ≈ 90 seconds · no restart of macOS required</text>
+
+  <!-- Step numbers as colored circles + arrow flow -->
+  <!-- Step 1 -->
+  <g transform="translate(60,110)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Restart Thunderbird</text>
+    <text x="12" y="68" font-size="11" fill="#445">Cmd+Q then reopen — TB reads the</text>
+    <text x="12" y="84" font-size="11" fill="#445">native-messaging manifests on boot.</text>
+  </g>
+
+  <!-- Step 2 -->
+  <g transform="translate(320,110)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Open about:debugging</text>
+    <text x="12" y="68" font-size="11" fill="#445">Paste this in the URL bar:</text>
+    <text x="12" y="84" font-size="11" fill="#0f5c5c" font-weight="600">about:debugging#/runtime/this-mv3</text>
+  </g>
+
+  <!-- Step 3 -->
+  <g transform="translate(580,110)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Load Temporary Add-on</text>
+    <text x="12" y="68" font-size="11" fill="#445">Click the green button. In the</text>
+    <text x="12" y="84" font-size="11" fill="#445">file picker, navigate to extension/.</text>
+  </g>
+
+  <!-- Step 4 -->
+  <g transform="translate(840,110)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Pick manifest.json</text>
+    <text x="12" y="68" font-size="11" fill="#445">Select the file (not the folder).</text>
+    <text x="12" y="84" font-size="11" fill="#445">TB will print the UUID it generated.</text>
+  </g>
+
+  <!-- Arrows between row 1 -->
+  <path d="M280,160 L320,160" stroke="#1a8c8c" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M540,160 L580,160" stroke="#1a8c8c" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M800,160 L840,160" stroke="#1a8c8c" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Step 5 -->
+  <g transform="translate(60,300)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Open a test email</text>
+    <text x="12" y="68" font-size="11" fill="#445">Send yourself something with</text>
+    <text x="12" y="84" font-size="11" fill="#445">≥ 1 attachment, then select it.</text>
+  </g>
+
+  <!-- Step 6 -->
+  <g transform="translate(320,300)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Right-click attachment</text>
+    <text x="12" y="68" font-size="11" fill="#445">Pick "Copy Attachment as File"</text>
+    <text x="12" y="84" font-size="11" fill="#445">or "Copy All Attachments as Files".</text>
+  </g>
+
+  <!-- Step 7 -->
+  <g transform="translate(580,300)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Switch to target app</text>
+    <text x="12" y="68" font-size="11" fill="#445">Finder · WeChat · DingTalk · Lark</text>
+    <text x="12" y="84" font-size="11" fill="#445">Slack · new email — anything that</text>
+    <text x="12" y="100" font-size="11" fill="#445">accepts pasted files.</text>
+  </g>
+
+  <!-- Step 8 -->
+  <g transform="translate(840,300)" filter="url(#shadow)">
+    <rect width="220" height="100" rx="12" fill="url(#card)" stroke="#1a8c8c" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="20" fill="url(#ok)"/>
+    <text x="32" y="38" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+    <text x="64" y="36" font-size="15" font-weight="700" fill="#0f3d3d">Cmd+V</text>
+    <text x="12" y="68" font-size="11" fill="#445">The real file lands where your</text>
+    <text x="12" y="84" font-size="11" fill="#445">cursor is — no temp save dialog.</text>
+  </g>
+
+  <!-- Arrows row 2 -->
+  <path d="M280,350 L320,350" stroke="#1a8c8c" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M540,350 L580,350" stroke="#1a8c8c" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M800,350 L840,350" stroke="#1a8c8c" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- U-shape connector between row 1 end and row 2 start -->
+  <path d="M950,210 L950,265 L160,265 L160,300" stroke="#1a8c8c" stroke-width="2" stroke-dasharray="4 4" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Success banner -->
+  <g transform="translate(60,470)">
+    <rect width="1000" height="120" rx="14" fill="#e8f7f1" stroke="#1a8c8c" stroke-width="2"/>
+    <text x="500" y="38" font-size="18" font-weight="700" text-anchor="middle" fill="#0f3d3d">What success looks like</text>
+    <text x="40" y="72" font-size="13" fill="#1a3a3a">✓ TB shows notification: "Copied 1 attachment" (or N attachments)</text>
+    <text x="40" y="92" font-size="13" fill="#1a3a3a">✓ Finder creates a real file with the original name + extension, byte-perfect contents</text>
+    <text x="40" y="112" font-size="13" fill="#1a3a3a">✓ Cache file lives at ~/Library/Caches/AttachClip/sessions/&lt;uuid&gt;/ for 72h then auto-cleans</text>
+  </g>
+
+  <!-- Troubleshooting strip -->
+  <g transform="translate(60,610)">
+    <rect width="1000" height="120" rx="14" fill="#fff5e8" stroke="#ff9f43" stroke-width="1.5"/>
+    <text x="500" y="32" font-size="16" font-weight="700" text-anchor="middle" fill="#7a4f00">If something breaks</text>
+    <text x="40" y="62" font-size="12" fill="#5a3a00">Helper not found → re-run <tspan font-family="ui-monospace,Menlo,monospace">cd native-host/macos &amp;&amp; ./install.sh</tspan>, then restart TB</text>
+    <text x="40" y="82" font-size="12" fill="#5a3a00">Permission denied → macOS Gatekeeper: System Settings → Privacy &amp; Security → Open Anyway</text>
+    <text x="40" y="102" font-size="12" fill="#5a3a00">No clipboard → run <tspan font-family="ui-monospace,Menlo,monospace">python3 scripts/smoke_test.py --helper ~/.local/bin/attachclip-host</tspan> to bisect</text>
+  </g>
+</svg>

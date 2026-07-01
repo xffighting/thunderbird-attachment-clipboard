@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "description": "Right-click any email attachment to copy it as a real file to the macOS clipboard. Cmd+V into Finder, WeChat, DingTalk, Lark, Slack, or a new email.",
   "author": "AttachClip Maintainers",
-  "homepage_url": "https://github.com/EXAMPLE/thunderbird-attachment-clipboard",
+  "homepage_url": "https://github.com/xffighting/thunderbird-attachment-clipboard",
 
   "browser_specific_settings": {
     "gecko": {

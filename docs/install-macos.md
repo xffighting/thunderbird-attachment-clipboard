@@ -21,7 +21,7 @@ swift --version          # Apple Swift version 5.7 (build ...) or newer
 ## One-shot install
 
 ```bash
-git clone https://github.com/EXAMPLE/thunderbird-attachment-clipboard.git
+git clone https://github.com/xffighting/thunderbird-attachment-clipboard.git
 cd thunderbird-attachment-clipboard/native-host/macos
 ./install.sh
 ```
@@ -30,11 +30,12 @@ The script does the following:
 
 | Step | Notes                                                      |
 | ---- | ---------------------------------------------------------- |
-| 1    | Runs `swift build -c release --triple x86_64-apple-macosx12.0` |
+| 1    | Detects host arch via `uname -m` and runs `swift build -c release --triple $TARGET` (arm64-apple-macosx12.0 on Apple Silicon) |
 | 2    | Copies the binary to `~/.local/bin/attachclip-host` (or `/usr/local/bin` under sudo) |
 | 3    | Sets mode `0755`                                            |
 | 4    | Renders the manifest template with the resolved binary path |
-| 5    | Writes the manifest to `~/Library/Application Support/Mozilla/NativeMessagingHosts/com.attachclip.host.json` |
+| 5    | Writes the manifest to BOTH `~/Library/Application Support/Thunderbird/NativeMessagingHosts/com.attachclip.host.json` (Thunderbird-specific) **and** `~/Library/Application Support/Mozilla/NativeMessagingHosts/com.attachclip.host.json` (Firefox-compatible) |
+| 6    | Pre-creates `~/Library/Caches/AttachClip/sessions/`         |
 
 > Tip — if `~/.local/bin` is not on your `$PATH`, append it: 
 > ```bash
@@ -43,11 +44,12 @@ The script does the following:
 
 ## Load the extension in Thunderbird
 
+The full 8-step visual is in [`docs/img/tb-load-steps.svg`](img/tb-load-steps.svg). Quick text version:
+
 1. Restart Thunderbird so it re-reads the native messaging
    manifest.
    (Important: Thunderbird caches the host registry on launch.)
-2. Open **Tools → Developer Tools → about:debugging** (or
-   visit `about:debugging#/runtime/this-firefox` in the address bar).
+2. Visit `about:debugging#/runtime/this-mv3` in the address bar.
 3. Click **Load Temporary Add-on…** and pick
    `extension/manifest.json` from the cloned repo.
 4. The two context menu items appear immediately.
