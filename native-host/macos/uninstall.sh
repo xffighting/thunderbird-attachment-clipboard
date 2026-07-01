@@ -17,8 +17,16 @@ HOST_NAME="com.attachclip.host"
 
 USER_BIN="$HOME/.local/bin/attachclip-host"
 ROOT_BIN="/usr/local/bin/attachclip-host"
-USER_MANIFEST="$HOME/Library/Application Support/Mozilla/NativeMessagingHosts/${HOST_NAME}.json"
-SYS_MANIFEST="/Library/Application Support/Mozilla/NativeMessagingHosts/${HOST_NAME}.json"
+# Manifest paths mirror what install.sh writes.  Thunderbird scans the
+# Thunderbird/-namespaced location; Mozilla/-namespaced is the Firefox one.
+USER_MANIFESTS=(
+  "$HOME/Library/Application Support/Thunderbird/NativeMessagingHosts/${HOST_NAME}.json"
+  "$HOME/Library/Application Support/Mozilla/NativeMessagingHosts/${HOST_NAME}.json"
+)
+SYS_MANIFESTS=(
+  "/Library/Application Support/Thunderbird/NativeMessagingHosts/${HOST_NAME}.json"
+  "/Library/Application Support/Mozilla/NativeMessagingHosts/${HOST_NAME}.json"
+)
 
 echo "==> Removing binary"
 for b in "$USER_BIN" "$ROOT_BIN"; do
@@ -33,7 +41,7 @@ for b in "$USER_BIN" "$ROOT_BIN"; do
 done
 
 echo "==> Removing native messaging manifest"
-for m in "$USER_MANIFEST" "$SYS_MANIFEST"; do
+for m in "${USER_MANIFESTS[@]}" "${SYS_MANIFESTS[@]}"; do
   if [[ -e "$m" ]]; then
     if [[ -w "$(dirname "$m")" ]]; then
       rm -f "$m"
@@ -62,5 +70,5 @@ cat <<EOF
 Next steps:
   1. Restart Thunderbird so it forgets the helper.
   2. Optionally remove the extension itself via:
-       about:debugging#/runtime/this-firefox  →  AttachClip → Remove
+       about:debugging#/runtime/this-mv3  →  AttachClip → Remove
 EOF
