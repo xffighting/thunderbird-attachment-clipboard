@@ -42,11 +42,18 @@ echo "    Arch    : $HOST_ARCH ($HELPER_ASSET)"
 echo
 
 echo "==> Downloading helper binary..."
-curl -fSL --retry 3 -o "$TMP_DIR/helper" "$BASE_URL/$HELPER_ASSET"
+# GitHub release-assets endpoint returns 404 unless a User-Agent header is
+# sent. Provide a stable UA so the install is reproducible.
+curl -fSL --retry 3 \
+  -A "AttachClipInstaller/0.1 (+https://github.com/${REPO})" \
+  -o "$TMP_DIR/helper" \
+  "$BASE_URL/$HELPER_ASSET"
 chmod 0755 "$TMP_DIR/helper"
 
 echo "==> Verifying signature (sha256)..."
-EXPECTED="$(curl -fsSL "$BASE_URL/SHA256SUMS" | awk -v a="$HELPER_ASSET" '$2==a {print $1}')"
+EXPECTED="$(curl -fsSL \
+  -A "AttachClipInstaller/0.1 (+https://github.com/${REPO})" \
+  "$BASE_URL/SHA256SUMS" | awk -v a="$HELPER_ASSET" '$2==a {print $1}')"
 ACTUAL="$(shasum -a 256 "$TMP_DIR/helper" | awk '{print $1}')"
 if [[ -z "$EXPECTED" ]]; then
   echo "WARN: no SHA256SUMS entry for $HELPER_ASSET in $VERSION; skipping verification."
@@ -90,7 +97,7 @@ done
 mkdir -p "$HOME/Library/Caches/AttachClip/sessions"
 echo "==> Cache dir       : $HOME/Library/Caches/AttachClip/sessions/"
 
-cat <<'EOF'
+cat <<EOF
 
 ================================================================
   AttachClip helper installed. Just two more clicks in Thunderbird:
@@ -99,7 +106,7 @@ cat <<'EOF'
   Step 1. Restart Thunderbird 128+ so it picks up the new manifest.
 
   Step 2. Download the add-on (.xpi) from:
-            https://github.com/REPLACE_ME/releases/tag/VERSION
+            https://github.com/${REPO}/releases/download/${VERSION}/attachclip-thunderbird-0.1.0.xpi
 
   Step 3. In Thunderbird, open the menu (≡) -> "Add-ons and Themes".
           Click the gear icon -> "Install Add-on From File...".
@@ -110,6 +117,7 @@ cat <<'EOF'
           "Copy Attachment as File".  Switch to Finder, hit Cmd+V —
           a real file lands on the desktop.
 
-  Uninstall: curl -fsSL .../scripts/uninstall_for_user.sh | bash
+  Uninstall:
+    curl -fsSL https://raw.githubusercontent.com/${REPO}/main/scripts/uninstall_for_user.sh | bash
 ================================================================
 EOF
