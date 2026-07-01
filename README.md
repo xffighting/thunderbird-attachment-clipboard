@@ -8,7 +8,7 @@
 [![macOS first](https://img.shields.io/badge/platform-macOS-blue)](#-installation)
 [![Thunderbird 128+](https://img.shields.io/badge/thunderbird-128%2B-orange)](#-installation)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Version: 0.1.0-alpha.2](https://img.shields.io/badge/version-0.1.0--alpha.2-red)](CHANGELOG.md)
+[![Version: 0.1.0-alpha.3](https://img.shields.io/badge/version-0.1.0--alpha.3-red)](CHANGELOG.md)
 [![No telemetry](https://img.shields.io/badge/telemetry-none-brightgreen)](PRIVACY.md)
 
 ---
@@ -56,35 +56,31 @@ real file URLs on the pasteboard.
 
 Read the [full privacy statement](PRIVACY.md).
 
-## Installation
+## Installation — 3 clicks
+
+![Install steps](docs/img/xpi-install-steps.svg)
+
+**Step 1 — one shell command** (downloads the helper binary):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/xffighting/thunderbird-attachment-clipboard/main/scripts/install_for_user.sh | bash
+```
+
+**Step 2 — restart Thunderbird** (Cmd+Q then reopen).
+
+**Step 3 — drag the `.xpi` into Thunderbird**:
+download [`attachclip-thunderbird-0.1.0.xpi`](https://github.com/xffighting/thunderbird-attachment-clipboard/releases/latest/download/attachclip-thunderbird-0.1.0.xpi)
+from the latest release, then in Thunderbird:
+menu (≡) → **Add-ons and Themes** → gear icon ⚙ → **Install Add-on From File…** → pick the `.xpi`.
+
+That's it. No `git clone`, no Swift toolchain, no `about:debugging`.
 
 > **macOS only** for this release. Windows / Linux are on the
 > [roadmap](ROADMAP.md) — see [docs/upstream-proposal.md](docs/upstream-proposal.md)
 > for why a native helper is needed on every platform.
-
-### One-shot install
-
-```bash
-git clone https://github.com/xffighting/thunderbird-attachment-clipboard.git
-cd thunderbird-attachment-clipboard/native-host/macos
-./install.sh                       # builds helper via Swift Package Manager
-```
-
-The script will:
-
-1. `swift build -c release` the helper binary.
-2. Copy `attachclip-host` into `~/.local/bin/` (or `/usr/local/bin/` with
-   `sudo`).
-3. Render the native-messaging manifest into
-   `~/Library/Application Support/Mozilla/NativeMessagingHosts/com.attachclip.host.json`.
-
-### Load the extension in Thunderbird
-
-1. Restart Thunderbird so it picks up the native messaging manifest.
-2. Go to **Tools → Developer Tools → about:debugging** → **This Firefox**.
-3. Click **Load Temporary Add-on…** and pick
-   `extension/manifest.json` from this repo.
-4. The two right-click menu items appear immediately — no restart needed.
+>
+> **For developers / contributors**: see
+> [`docs/install-macos.md`](docs/install-macos.md) for the source-build path.
 
 ## Usage
 

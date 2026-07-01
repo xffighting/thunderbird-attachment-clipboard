@@ -14,6 +14,40 @@ not** considered stable.
 ### Added
 - (placeholder — populate on next merge)
 
+## [0.1.0-alpha.3] — 2026-07-01
+
+> **UX-focused release.** End-user install path is now a one-line
+> `curl | bash` for the helper plus a drag-into-Add-ons-Manager step
+> for the `.xpi`. The `about:debugging` workflow is still supported
+> for contributors but no longer recommended for end users.
+
+### Added
+- `scripts/install_for_user.sh` — single-line installer that downloads a
+  prebuilt helper for arm64 or x86_64 from the GitHub release, verifies
+  its SHA-256, places the binary in `~/.local/bin/`, and writes the
+  native-messaging manifest into the locations Thunderbird scans.
+- `scripts/uninstall_for_user.sh` — mirror-image uninstaller (removes
+  binary, manifests, and cache; leaves the Thunderbird profile alone).
+- Prebuilt helper binaries attached to the release:
+  `attachclip-host-arm64`, `attachclip-host-x86_64`, plus `SHA256SUMS`.
+- `docs/img/xpi-install-steps.svg` — visual 4-step guide for the
+  Thunderbird Add-ons Manager flow (hamburger menu → gear icon → pick
+  `.xpi` → confirm permissions).
+- `docs/install-macos.md` rewritten as a 3-click guide aimed at end
+  users; source-build path moved to a "developer install" subsection.
+
+### Changed
+- README "Installation" section now leads with the one-line curl
+  installer + drag-into-TB flow; the `git clone` + `swift build` path
+  is demoted to the developer docs.
+- XPI packaging size unchanged; manifest now ships with the three
+  generated icons (`icon-{48,96,128}.png`).
+
+### Notes
+- The minimum Thunderbird version for permanent (non-temporary) install
+  via the Add-ons Manager is **128.0**, which is already the project's
+  declared floor. TB 115 ESR users will need the temporary-loader path.
+
 ## [0.1.0-alpha.2] — 2026-07-01
 
 > Local-installable alpha. macOS only. Verified end-to-end with

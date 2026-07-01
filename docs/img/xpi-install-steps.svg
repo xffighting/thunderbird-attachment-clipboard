@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 920" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6f7f9"/>
+      <stop offset="1" stop-color="#eef1f5"/>
+    </linearGradient>
+    <linearGradient id="tb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e3a5f"/>
+      <stop offset="1" stop-color="#0f1f33"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#fafbfc"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="680" height="920" fill="url(#bg)"/>
+  <text x="340" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#0f1f33">Install AttachClip — 4 clicks in Thunderbird</text>
+  <text x="340" y="58" text-anchor="middle" font-size="13" fill="#475569">No terminal, no git clone, no about:debugging.</text>
+
+  <!-- Step 1: hamburger menu -->
+  <g transform="translate(40,90)">
+    <rect width="600" height="160" rx="12" fill="url(#tb)" filter="url(#shadow)"/>
+    <text x="20" y="28" font-size="11" font-weight="700" fill="#fbbf24">STEP 1</text>
+    <text x="80" y="28" font-size="13" font-weight="600" fill="#fff">Open the menu (≡) and pick "Add-ons and Themes"</text>
+    <!-- hamburger icon -->
+    <g transform="translate(540,18)" stroke="#fff" stroke-width="2" stroke-linecap="round">
+      <line x1="0" y1="0" x2="22" y2="0"/>
+      <line x1="0" y1="6" x2="22" y2="6"/>
+      <line x1="0" y1="12" x2="22" y2="12"/>
+    </g>
+    <!-- menu dropdown -->
+    <g transform="translate(530,40)">
+      <rect width="60" height="100" rx="4" fill="#fff" opacity="0.95"/>
+      <rect x="6" y="8" width="48" height="14" rx="2" fill="#1e3a5f"/>
+      <text x="30" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#fff">≡</text>
+      <rect x="6" y="26" width="48" height="14" rx="2" fill="#fbbf24"/>
+      <text x="30" y="36" text-anchor="middle" font-size="8" font-weight="700" fill="#0f1f33">Add-ons</text>
+      <rect x="6" y="44" width="48" height="14" rx="2" fill="#e5e7eb"/>
+      <rect x="6" y="62" width="48" height="14" rx="2" fill="#e5e7eb"/>
+      <rect x="6" y="80" width="48" height="14" rx="2" fill="#e5e7eb"/>
+    </g>
+  </g>
+
+  <line x1="340" y1="252" x2="340" y2="280" stroke="#475569" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <!-- Step 2: gear menu -->
+  <g transform="translate(40,290)">
+    <rect width="600" height="160" rx="12" fill="url(#tb)" filter="url(#shadow)"/>
+    <text x="20" y="28" font-size="11" font-weight="700" fill="#fbbf24">STEP 2</text>
+    <text x="80" y="28" font-size="13" font-weight="600" fill="#fff">Click the gear icon at the top right → "Install Add-on From File…"</text>
+    <!-- gear -->
+    <g transform="translate(530,18)">
+      <circle cx="11" cy="11" r="9" fill="none" stroke="#fff" stroke-width="2"/>
+      <circle cx="11" cy="11" r="3" fill="#fff"/>
+      <g stroke="#fff" stroke-width="2" stroke-linecap="round">
+        <line x1="11" y1="0" x2="11" y2="4"/>
+        <line x1="11" y1="18" x2="11" y2="22"/>
+        <line x1="0" y1="11" x2="4" y2="11"/>
+        <line x1="18" y1="11" x2="22" y2="11"/>
+      </g>
+    </g>
+    <!-- gear dropdown -->
+    <g transform="translate(420,42)">
+      <rect width="170" height="86" rx="4" fill="#fff" opacity="0.97"/>
+      <text x="10" y="18" font-size="10" fill="#1f2937">Manage Extensions</text>
+      <text x="10" y="34" font-size="10" fill="#1f2937">Check for Updates</text>
+      <rect x="0" y="44" width="170" height="20" rx="2" fill="#fef3c7"/>
+      <text x="10" y="58" font-size="10" font-weight="700" fill="#0f1f33">▸ Install Add-on From File…</text>
+      <text x="10" y="78" font-size="10" fill="#1f2937">Debug Add-ons</text>
+    </g>
+  </g>
+
+  <line x1="340" y1="452" x2="340" y2="480" stroke="#475569" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <!-- Step 3: file picker -->
+  <g transform="translate(40,490)">
+    <rect width="600" height="160" rx="12" fill="url(#tb)" filter="url(#shadow)"/>
+    <text x="20" y="28" font-size="11" font-weight="700" fill="#fbbf24">STEP 3</text>
+    <text x="80" y="28" font-size="13" font-weight="600" fill="#fff">Pick the .xpi you downloaded (typically in ~/Downloads)</text>
+    <!-- file picker dialog -->
+    <g transform="translate(180,42)">
+      <rect width="240" height="100" rx="6" fill="#fff" opacity="0.97"/>
+      <rect width="240" height="20" rx="6" fill="#e5e7eb"/>
+      <text x="10" y="14" font-size="9" fill="#1f2937">~/Downloads</text>
+      <rect x="10" y="32" width="220" height="20" rx="2" fill="#dbeafe" stroke="#3b82f6"/>
+      <text x="20" y="46" font-size="10" font-weight="600" fill="#1e3a5f">📦 attachclip-thunderbird.xpi</text>
+      <rect x="10" y="58" width="220" height="14" rx="2" fill="#f3f4f6"/>
+      <rect x="10" y="76" width="220" height="14" rx="2" fill="#f3f4f6"/>
+      <rect x="170" y="78" width="60" height="18" rx="3" fill="#3b82f6"/>
+      <text x="200" y="91" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">Open</text>
+    </g>
+  </g>
+
+  <line x1="340" y1="652" x2="340" y2="680" stroke="#475569" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <!-- Step 4: permission prompt -->
+  <g transform="translate(40,690)">
+    <rect width="600" height="200" rx="12" fill="url(#tb)" filter="url(#shadow)"/>
+    <text x="20" y="28" font-size="11" font-weight="700" fill="#fbbf24">STEP 4</text>
+    <text x="80" y="28" font-size="13" font-weight="600" fill="#fff">Confirm the permission prompt — AttachClip only reads attachments</text>
+    <!-- permission dialog -->
+    <g transform="translate(140,42)">
+      <rect width="320" height="140" rx="8" fill="#fff" opacity="0.97"/>
+      <rect width="320" height="28" rx="8" fill="#fbbf24"/>
+      <text x="14" y="19" font-size="11" font-weight="700" fill="#0f1f33">⚠ Allow AttachClip for Thunderbird to install?</text>
+      <text x="14" y="50" font-size="10" font-weight="600" fill="#1f2937">Permissions requested:</text>
+      <text x="14" y="68" font-size="10" fill="#1f2937">• Read your email attachments on click</text>
+      <text x="14" y="84" font-size="10" fill="#1f2937">• Display notifications in Thunderbird</text>
+      <text x="14" y="100" font-size="10" fill="#1f2937">• Exchange messages with a native helper app</text>
+      <text x="14" y="120" font-size="9" font-style="italic" fill="#475569">AttachClip does NOT modify, send, or delete any email.</text>
+      <rect x="160" y="124" width="68" height="14" rx="3" fill="#16a34a"/>
+      <text x="194" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">Allow</text>
+      <rect x="232" y="124" width="68" height="14" rx="3" fill="#94a3b8"/>
+      <text x="266" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">Cancel</text>
+    </g>
+  </g>
+</svg>

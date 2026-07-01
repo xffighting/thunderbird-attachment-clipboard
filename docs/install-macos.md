@@ -1,102 +1,107 @@
-# Install on macOS
+# Install on macOS — 3 clicks
 
-> Follow these steps on the machine that runs Thunderbird. The
-> helper binary installs **per-user** unless you `sudo`.
+> The whole thing takes about 60 seconds and **no terminal, no git clone,
+> no Swift toolchain** is needed for end users.
 
-## Requirements
+Visual walkthrough: [`docs/img/xpi-install-steps.svg`](img/xpi-install-steps.svg).
 
-- macOS 12 Monterey or newer (Apple Silicon or Intel)
-- Thunderbird 128.0 or newer
-- Xcode 14+ command-line tools (`xcode-select --install`), which
-  include `swift` 5.7+
+## What you'll do
 
-You can verify with:
+1. **Run one shell command** — downloads the helper binary and registers
+   the native-messaging manifest. **One line.**
+2. **Download an `.xpi`** from the GitHub release.
+3. **Drag it into Thunderbird** — `menu (≡) → Add-ons and Themes → gear
+   icon → Install Add-on From File… → pick the .xpi`.
+
+That's it. Restart Thunderbird once and you're done.
+
+---
+
+## Step 1 — install the helper (one line)
+
+Open **Terminal** (`Cmd+Space`, type `terminal`, hit Enter), paste this,
+press Enter:
 
 ```bash
-swift --version          # Apple Swift version 5.7 (build ...) or newer
-/Applications/Thunderbird.app/Contents/MacOS/thunderbird --version
-                        # Mozilla Thunderbird 128.x ...
+curl -fsSL https://raw.githubusercontent.com/xffighting/thunderbird-attachment-clipboard/main/scripts/install_for_user.sh | bash
 ```
 
-## One-shot install
+What that command does (you don't need to know, but in case you're curious):
+
+| What | Where it lands |
+| ---- | -------------- |
+| Downloads the prebuilt helper for your Mac's architecture (arm64 or x86_64) | `~/.local/bin/attachclip-host` |
+| Drops the native-messaging manifest Thunderbird scans on launch | `~/Library/Application Support/Thunderbird/NativeMessagingHosts/com.attachclip.host.json` |
+| Pre-creates the cache directory where attachment files are staged before paste | `~/Library/Caches/AttachClip/sessions/` |
+
+If you want to pin a specific release (recommended for production), set
+the env var:
 
 ```bash
-git clone https://github.com/xffighting/thunderbird-attachment-clipboard.git
-cd thunderbird-attachment-clipboard/native-host/macos
-./install.sh
+ATTACHCLIP_VERSION=v0.1.0-alpha.3 curl -fsSL https://raw.githubusercontent.com/xffighting/thunderbird-attachment-clipboard/main/scripts/install_for_user.sh | bash
 ```
 
-The script does the following:
+## Step 2 — restart Thunderbird
 
-| Step | Notes                                                      |
-| ---- | ---------------------------------------------------------- |
-| 1    | Detects host arch via `uname -m` and runs `swift build -c release --triple $TARGET` (arm64-apple-macosx12.0 on Apple Silicon) |
-| 2    | Copies the binary to `~/.local/bin/attachclip-host` (or `/usr/local/bin` under sudo) |
-| 3    | Sets mode `0755`                                            |
-| 4    | Renders the manifest template with the resolved binary path |
-| 5    | Writes the manifest to BOTH `~/Library/Application Support/Thunderbird/NativeMessagingHosts/com.attachclip.host.json` (Thunderbird-specific) **and** `~/Library/Application Support/Mozilla/NativeMessagingHosts/com.attachclip.host.json` (Firefox-compatible) |
-| 6    | Pre-creates `~/Library/Caches/AttachClip/sessions/`         |
+Fully quit (`Cmd+Q`) and reopen Thunderbird. This lets it pick up the
+new native-messaging manifest.
 
-> Tip — if `~/.local/bin` is not on your `$PATH`, append it: 
-> ```bash
-> echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
-> ```
+## Step 3 — drag the `.xpi` into Thunderbird
 
-## Load the extension in Thunderbird
+1. Download `attachclip-thunderbird-0.1.0.xpi` from
+   [the latest release on GitHub](https://github.com/xffighting/thunderbird-attachment-clipboard/releases/latest).
+   Most browsers drop it into `~/Downloads`.
+2. In Thunderbird, open the menu (≡) at the top right → **Add-ons and Themes**.
+3. Click the **gear icon** ⚙ at the top right of the Add-ons Manager.
+4. Choose **Install Add-on From File…**.
+5. Navigate to `~/Downloads`, pick the `.xpi`, click **Open**.
+6. Click **Allow** on the permission prompt. AttachClip only asks for
+   `messagesRead`, `nativeMessaging`, `contextMenus`, `notifications`,
+   and `menus` — **never** `messagesModify`, `compose`, or `sending`.
 
-The full 8-step visual is in [`docs/img/tb-load-steps.svg`](img/tb-load-steps.svg). Quick text version:
+The add-on is now installed and persists across Thunderbird restarts.
+(Temporary loaders via `about:debugging` are removed when TB closes —
+not what you want.)
 
-1. Restart Thunderbird so it re-reads the native messaging
-   manifest.
-   (Important: Thunderbird caches the host registry on launch.)
-2. Visit `about:debugging#/runtime/this-mv3` in the address bar.
-3. Click **Load Temporary Add-on…** and pick
-   `extension/manifest.json` from the cloned repo.
-4. The two context menu items appear immediately.
+## Step 4 — try it
 
-Temporary add-ons are removed when you close Thunderbird.
-For a persistent install, see the "Persistent install" section
-in [upstream-proposal.md](upstream-proposal.md) — it requires
-signing from `addons.thunderbird.net`, which is a v1.0.0 milestone.
-
-## Verify
-
-1. Open any email with at least one attachment.
+1. Open any email that has at least one attachment.
 2. Right-click the attachment → **Copy Attachment as File**.
-3. In Finder, hit **Cmd+V**. A real file appears with the
-   correct icon and extension.
-4. Repeat the right-click on **the message itself**
-   (`Copy All Attachments as Files`) and verify with Cmd+V into
-   a Slack / WeChat / Lark window.
+3. Switch to Finder (or WeChat, Lark, DingTalk, Slack, a new Thunderbird
+   compose window) → press **Cmd+V**.
+4. The real file appears with its original filename and extension.
 
-## Re-running / Repairing
+For multi-attachment emails, right-click the message itself and pick
+**Copy All Attachments as Files**.
 
-The install script is idempotent. To repair:
+---
 
-```bash
-./install.sh           # overwrites both binary and manifest
-```
+## Common gotchas
 
-If the helper stops responding, try:
+| Symptom | Fix |
+| ------- | --- |
+| Terminal says `permission denied` | `chmod +x ~/local/bin` doesn't help; instead the helper binary should already be 0755 — verify with `ls -l ~/.local/bin/attachclip-host`. |
+| Thunderbird's "Install Add-on From File…" is greyed out | TB is signed and you must explicitly enable unsigned add-ons: `about:config` → `xpinstall.signatures.required` = `false`. Only relevant for Thunderbird 115 ESR; TB 128+ ships with a more permissive default for temporary + signed add-ons. |
+| Right-click menu items don't show | Restart Thunderbird once more (Cmd+Q then reopen). The native messaging registry is only re-read on launch. |
+| Cmd+V pastes text instead of a file | The target app doesn't accept file drops from clipboard. Check `docs/testing-matrix.md` for known-good targets. |
+| `attachclip-host not found` in TB console | Helper path in the manifest is wrong. Re-run Step 1; it re-creates the manifest with the absolute path of the installed binary. |
 
-```bash
-~/Library/Caches/AttachClip/   # inspect / nuke
-rm -rf ~/Library/Caches/AttachClip/
-attachclip-host                # run helper directly; type {"type":"ping","v":1}
-                               # on stdin (Ctrl-D on a blank line) to see pong
-```
+## Uninstall
 
-If that returns `{"ok":true,"type":"pong",...}` you have a
-working helper; the issue is on the Thunderbird side. See
-[troubleshooting.md](troubleshooting.md).
-
-## Uninstallation
-
-See [../native-host/macos/uninstall.sh](../native-host/macos/uninstall.sh)
-or run it directly:
+End users:
 
 ```bash
-./uninstall.sh
+curl -fsSL https://raw.githubusercontent.com/xffighting/thunderbird-attachment-clipboard/main/scripts/uninstall_for_user.sh | bash
 ```
 
-Don't forget to remove the temporary add-on via `about:debugging`.
+Then in Thunderbird: menu (≡) → Add-ons and Themes → find "AttachClip
+for Thunderbird" → **Remove**. Restart Thunderbird.
+
+## Developer install (alternative)
+
+If you want to hack on the extension itself or rebuild the helper,
+use the source install path: `git clone … && cd native-host/macos &&
+./install.sh`. That's documented in
+[`native-host/macos/install.sh`](../native-host/macos/install.sh) and is
+only needed for contributors. End users should use the one-line curl
+installer above.
