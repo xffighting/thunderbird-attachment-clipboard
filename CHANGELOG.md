@@ -14,6 +14,31 @@ not** considered stable.
 ### Added
 - (placeholder — populate on next merge)
 
+## [0.1.0-alpha.2] — 2026-07-01
+
+> Local-installable alpha. macOS only. Verified end-to-end with
+> `scripts/smoke_test.py` against the freshly built arm64 helper.
+
+### Added
+- Programmatic 48/96/128 icons (`extension/icons/`), wired into
+  `manifest.json`.
+- `scripts/build_icons.py` — reproducible PIL-only icon generator.
+- `scripts/build_xpi.py` — reproducible XPI packer with SHA-256 sidecar.
+- `dist/attachclip-thunderbird-0.1.0.xpi` (25 KB, SHA-256 verified).
+
+### Fixed
+- `install.sh` now detects host arch (arm64 vs x86_64) instead of
+  hard-coding x86_64. Apple Silicon no longer needs Rosetta.
+- `install.sh` now writes the native messaging manifest to the
+  Thunderbird-specific path:
+  `~/Library/Application Support/Thunderbird/NativeMessagingHosts/com.attachclip.host.json`
+  (previously only the Firefox/Mozilla/ path was written, which
+  Thunderbird does not scan).
+- `uninstall.sh` mirrored to clean both Thunderbird/ and Mozilla/
+  manifests.
+- Post-install banner now points to the correct
+  `about:debugging#/runtime/this-mv3` URL for Thunderbird 128+.
+
 ## [0.1.0-alpha.1] — 2026-07-01
 
 > First open-source cut. macOS only. Thunderbird 128+ (Manifest V3).
