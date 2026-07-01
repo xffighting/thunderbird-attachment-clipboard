@@ -1,0 +1,175 @@
+# =============================================================================
+#  AttachClip for Thunderbird — CI
+# =============================================================================
+# Triggered on every push and PR. We deliberately keep the job matrix
+# narrow — alpha-quality software benefits more from a fast green/red
+# signal than from a sprawling workflow.
+#
+# Jobs:
+#   lint-js         — eslint over extension/src
+#   lint-md         — markdownlint over docs/, *.md
+#   build-extension — pack the WebExtension into a non-signed .xpi
+#   build-swift     — `swift build -c release` of the macOS helper
+#   manifest-check  — validate extension/manifest.json against
+#                       Mozilla's web-ext-lint schema
+# =============================================================================
+
+name: ci
+
+on:
+  push:
+    branches: [main, master, develop]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ----------------------------------------------------------------------
+  #  JavaScript linter
+  # ----------------------------------------------------------------------
+  lint-js:
+    name: ESLint (extension/src)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install eslint
+        run: |
+          npm init -y >/dev/null
+          npm install --no-save eslint@8
+      - name: Lint
+        run: |
+          cat > .eslintrc.json <<'JSON'
+          {
+            "root": true,
+            "env": { "browser": true, "webextensions": true, "es2022": true },
+            "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
+            "globals": {
+              "browser": "readonly",
+              "chrome": "readonly",
+              "messenger": "readonly"
+            },
+            "rules": {
+              "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+              "no-undef": "error",
+              "no-console": "off",
+              "no-var": "error",
+              "prefer-const": "warn",
+              "eqeqeq": ["error", "always"],
+              "semi": ["error", "always"],
+              "indent": ["error", 2, { "SwitchCase": 1 }]
+            }
+          }
+          JSON
+          npx eslint extension/src
+      - name: Echo success
+        run: echo "js lint OK"
+
+  # ----------------------------------------------------------------------
+  #  Markdown linter
+  # ----------------------------------------------------------------------
+  lint-md:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli@0.42
+      - name: Lint
+        run: |
+          cat > .markdownlint.json <<'JSON'
+          {
+            "default": true,
+            "MD013": { "line_length": 100, "code_blocks": false, "tables": false },
+            "MD033": false,
+            "MD041": false,
+            "MD024": { "siblings_only": true }
+          }
+          JSON
+          markdownlint '**/*.md' --ignore node_modules
+      - name: Echo success
+        run: echo "md lint OK"
+
+  # ----------------------------------------------------------------------
+  #  Extension pack
+  # ----------------------------------------------------------------------
+  build-extension:
+    name: Build .xpi (extension/)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pack
+        run: |
+          cd extension
+          zip -r ../attachclip-thunderbird-${{ github.event.pull_request.head.sha || github.sha }}.xpi . -x '*.DS_Store'
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: attachclip-xpi
+          path: "*.xpi"
+
+  # ----------------------------------------------------------------------
+  #  Swift build (macOS)
+  # ----------------------------------------------------------------------
+  build-swift:
+    name: Swift build (macOS helper)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show toolchain
+        run: |
+          swift --version
+          sw_vers
+      - name: Build (release)
+        run: |
+          cd native-host/macos
+          swift build -c release --triple x86_64-apple-macosx12.0
+      - name: Smoke-test helper
+        run: |
+          BIN="native-host/macos/.build/release/attachclip-host"
+          file "$BIN"
+          printf '{"type":"ping","v":1,"nonce":"ci"}\n' | "$BIN" \
+            | tr -d '\0' \
+            | head -c 4096 \
+            | python3 -c "import json,sys; obj=json.loads(sys.stdin.read()); assert obj.get('ok') and obj.get('type')=='pong'; print('helper OK:', obj)"
+      - name: Package helper bundle
+        run: |
+          mkdir -p dist
+          cp native-host/macos/.build/release/attachclip-host dist/attachclip-host
+          cd dist && tar czf attachclip-host-${{ github.event.pull_request.head.sha || github.sha }}.tar.gz attachclip-host
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: attachclip-host-tarball
+          path: "dist/*.tar.gz"
+
+  # ----------------------------------------------------------------------
+  #  manifest.json validation via web-ext
+  # ----------------------------------------------------------------------
+  manifest-check:
+    name: Validate extension/manifest.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install web-ext
+        run: npm install -g web-ext@7
+      - name: Lint
+        run: |
+          web-ext lint --source-dir=extension --self-hosted \
+            --output=text --pretty \
+            | tee /tmp/lint.log
+          rc=${PIPESTATUS[0]}
+          if [ $rc -ne 0 ]; then exit $rc; fi
+      - name: Echo
+        run: echo "manifest lint exit code 0 expected"

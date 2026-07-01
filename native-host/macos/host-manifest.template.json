@@ -1,0 +1,7 @@
+{
+  "name": "com.attachclip.host",
+  "description": "AttachClip for Thunderbird — local helper that writes email attachments to the macOS clipboard as real file URLs.",
+  "path": "__BINARY_PATH__",
+  "type": "stdio",
+  "allowed_extensions": ["attachclip-thunderbird@example.com"]
+}

@@ -1,0 +1,68 @@
+# =============================================================================
+#  AttachClip for Thunderbird — Dependabot configuration
+# =============================================================================
+# We only depend on GitHub Actions (CI), and we keep their version
+# pinned in the workflow files.  Dependabot still helps with the
+# occasional transitive tool (`web-ext`, `eslint`, `markdownlint-cli`)
+# we install on the fly.
+# =============================================================================
+
+version: 2
+
+updates:
+  # GitHub Actions: roll forward weekly; merge-or-pin minor.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 4
+    groups:
+      actions-minor:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-strategy: "pin"
+    commit-message:
+      prefix: "ci"
+      prefix-development: "ci"
+      include: "scope"
+
+  # npm tools used in CI only (eslint, web-ext, markdownlint-cli).
+  # We install them via `npm install -g` inside jobs — there's no
+  # committed package.json yet.  When we add one, this entry picks
+  # up the regular dependency updates.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      dev-tools:
+        patterns:
+          - "eslint"
+          - "web-ext"
+          - "markdownlint-cli"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+
+  # Swift Package Manager — we have no third-party Swift deps yet,
+  # but enabling this catches foundation/manifest refreshes when
+  # Xcode standard library moves.
+  - package-ecosystem: "swift"
+    directory: "/native-host/macos"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "swift-deps"
+      include: "scope"

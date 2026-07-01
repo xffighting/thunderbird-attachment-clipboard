@@ -1,0 +1,156 @@
+name: Bug report
+description: Something broke, or a happy path regressed.
+title: "[bug] "
+labels: ["type:bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Please fill in **all** of the
+        sections below — incomplete reports get closed after
+        a week.
+
+  - type: dropdown
+    id: tb_version
+    attributes:
+      label: Thunderbird version
+      description: From `About Thunderbird → Version`
+      options:
+        - TB 128.x (Latest stable)
+        - TB 132.x (Beta)
+        - TB 134.x (Daily)
+        - TB 139.x (Future ESR)
+        - other / unsure
+      validations:
+        required: true
+
+  - type: dropdown
+    id: macos
+    attributes:
+      label: macOS version
+      description: Apple menu → About This Mac
+      options:
+        - macOS 15 Sequoia (Apple Silicon)
+        - macOS 15 Sequoia (Intel)
+        - macOS 14 Sonoma (Apple Silicon)
+        - macOS 14 Sonoma (Intel)
+        - macOS 13 Ventura
+        - macOS 12 Monterey
+        - other
+      validations:
+        required: true
+
+  - type: input
+    id: attachclip_version
+    attributes:
+      label: AttachClip version
+      description: e.g. v0.1.0-alpha.1 (from `git describe` or release tag)
+    validations:
+      required: true
+
+  - type: input
+    id: paste_target
+    attributes:
+      label: Paste target application and version
+      description: e.g. "Finder 12.x", "WeChat 3.9.0 (6789)", "Slack 4.36.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: attach_type
+    attributes:
+      label: Attachment type
+      options:
+      - PDF
+      - Image (PNG/JPG/etc)
+      - Office (DOCX/XLSX/PPTX)
+      - ZIP / archive
+      - Plain text (TXT/CSV/MD)
+      - Other (specify in next step)
+    validations:
+      required: true
+
+  - type: input
+    id: attach_size
+    attributes:
+      label: Attachment size
+      description: Approximate size, e.g. "2 MB", "400 KB"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: copy_mode
+    attributes:
+      label: Which menu did you use?
+      options:
+      - Copy Attachment as File
+      - Copy All Attachments as Files
+      - Neither (extension doesn't show menu)
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List them in order.  Mention any non-default configuration.
+      placeholder: |
+        1. Open email from…
+        2. Right-click on…
+        3. Notice that…
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Paste relevant entries from:
+
+        - Thunderbird Browser Console (filter: `AttachClip`)
+        - `log stream --predicate 'subsystem == "com.attachclip.host"'`
+
+        **Redact anything sensitive** (usernames, message subjects,
+        client names, real numbers).  Use synthetic test data where
+        possible.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: duplicates
+    attributes:
+      label: Sanity checks
+      description: Please confirm before submitting
+      options:
+        - label: I have re-run ./native-host/macos/install.sh
+          required: true
+        - label: I have restarted Thunderbird
+          required: true
+        - label: I have read docs/troubleshooting.md
+          required: false
+        - label: I understand that sensitive attach contents should NOT be pasted here
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Maintainers: once triage is complete, replace
+        `needs-triage` with the appropriate priority label
+        (`priority:p0` / `p1` / `p2`).

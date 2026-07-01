@@ -1,0 +1,53 @@
+# =============================================================================
+#  AttachClip for Thunderbird — .gitignore
+# =============================================================================
+# Generated for v0.1.0-alpha.1. Keep this small and explicit.
+# -----------------------------------------------------------------------------
+
+# ----- macOS Native Host (Swift Package Manager) -----
+.build/
+.swiftpm/
+Packages/
+*.xcodeproj/
+*.xcworkspace/
+DerivedData/
+Package.resolved
+attachclip-host
+attachclip-host-*
+
+# ----- Build artifacts under scripts/ -----
+scripts/dist/
+scripts/build/
+*.zip.bak
+
+# ----- Thunderbird extension packaging -----
+extension/*.xpi
+extension/*.xpi.asc
+extension/web-ext-artifacts/
+
+# ----- Node / npm (in case we add a toolchain later) -----
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ----- Editor / OS -----
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ----- Secrets / never commit -----
+*.pem
+*.key
+secrets/
+
+# ----- Logs -----
+*.log
+logs/
+
+# ----- Local config overrides -----
+extension/src/config.local.js
+native-host/macos/config.local.json

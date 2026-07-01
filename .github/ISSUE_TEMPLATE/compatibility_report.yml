@@ -1,0 +1,111 @@
+name: Compatibility report
+description: Worked/didn't work with this app on this OS? Tell us.
+title: "[compat] <app> <version> on <os>"
+labels: ["type:compat", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when you want to add a row to
+        [docs/testing-matrix.md](https://github.com/EXAMPLE/thunderbird-attachment-clipboard/blob/main/docs/testing-matrix.md).
+
+  - type: dropdown
+    id: macos
+    attributes:
+      label: macOS version
+      options:
+        - macOS 15 Sequoia
+        - macOS 14 Sonoma
+        - macOS 13 Ventura
+        - macOS 12 Monterey
+        - other
+      validations:
+        required: true
+
+  - type: dropdown
+    id: arch
+    attributes:
+      label: Mac hardware
+      options:
+        - Apple Silicon (M1/M2/M3/M4)
+        - Intel
+      validations:
+        required: true
+
+  - type: input
+    id: tb_version
+    attributes:
+      label: Thunderbird version
+    validations:
+      required: true
+
+  - type: input
+    id: attachclip_version
+    attributes:
+      label: AttachClip version (git describe)
+    validations:
+      required: true
+
+  - type: input
+    id: app_target
+    attributes:
+      label: Paste-target app + version
+      description: e.g. "Things 3.21.4" or "Pages 14.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - ✅ Works as expected (single + all)
+        - ⚠️ Works partially (single OK, all not)
+        - ⚠️ Works partially (all OK, single not)
+        - ❌ Doesn't work
+        - ❌ Crashes / freezes app
+      validations:
+        required: true
+
+  - type: checkboxes
+    id: payload
+    attributes:
+      label: Tested with
+      description: Tick the payload sizes you confirmed.
+      options:
+      - label: 100 KB PDF
+        required: false
+      - label: 10 MB ZIP
+        required: false
+      - label: Image
+        required: false
+      - label: Multiple attachments with same name
+        required: false
+
+  - type: checkboxes
+    id: paths
+    attributes:
+      label: Trigger paths exercised
+      options:
+      - label: "Right-click single attachment → Copy Attachment as File"
+      - label: "Right-click message header → Copy All Attachments as Files"
+      - label: Both   (default)
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / screen-recording link / extra context
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmations
+      options:
+      - label: I confirm this is real testing, not a guess
+        required: true
+      - label: I am willing to be pinged for clarifying questions
+        required: false

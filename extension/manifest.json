@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "AttachClip for Thunderbird",
+  "short_name": "AttachClip",
+  "version": "0.1.0",
+  "description": "Right-click any email attachment to copy it as a real file to the macOS clipboard. Cmd+V into Finder, WeChat, DingTalk, Lark, Slack, or a new email.",
+  "author": "AttachClip Maintainers",
+  "homepage_url": "https://github.com/EXAMPLE/thunderbird-attachment-clipboard",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "attachclip-thunderbird@example.com",
+      "strict_min_version": "128.0",
+      "strict_max_version": "139.*"
+    }
+  },
+
+  "permissions": [
+    "messagesRead",
+    "nativeMessaging",
+    "contextMenus",
+    "notifications",
+    "menus"
+  ],
+
+  "background": {
+    "scripts": [
+      "src/filename.js",
+      "src/notifications.js",
+      "src/attachmentReader.js",
+      "src/nativeClient.js",
+      "src/menus.js",
+      "src/background.js"
+    ],
+    "persistent": false
+  },
+
+  "commands": {
+    "_execute_menus": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y"
+      },
+      "description": "Copy attachments from the currently displayed message (uses the last menu action)"
+    }
+  }
+}

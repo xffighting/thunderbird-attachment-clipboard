@@ -1,0 +1,25 @@
+# =============================================================================
+#  AttachClip for Thunderbird — .gitattributes
+# =============================================================================
+
+# Normalize line endings for text files so diffs are stable across OSes.
+*           text=auto eol=lf
+
+# Force LF for source files even on Windows checkouts
+*.js        text eol=lf
+*.json      text eol=lf
+*.swift     text eol=lf
+*.sh        text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+
+# Binary literals
+*.png       binary
+*.icns      binary
+*.ico       binary
+*.zip       binary
+*.xpi       binary
+
+# Avoid linguist mis-classifying vendored docs
+docs/       linguist-documentation

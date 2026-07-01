@@ -1,0 +1,74 @@
+name: Feature request
+description: Propose a small change to AttachClip itself.
+title: "[feature] "
+labels: ["type:feature", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before you file:
+
+        - Check [ROADMAP.md](https://github.com/EXAMPLE/thunderbird-attachment-clipboard/blob/main/ROADMAP.md) — maybe it's already planned.
+        - Check [issues](https://github.com/EXAMPLE/thunderbird-attachment-clipboard/issues?q=is%3Aissue+feature) — open a 👍 on existing requests.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What pain point are you addressing?
+      placeholder: |
+        Today, when I want to…
+        …I have to…
+        …which is annoying because…
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed change
+      description: High-level description, not a full spec.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Estimated impact
+      options:
+        - Most macOS users
+        - Power users / specific paste targets
+        - Edge case (rare config)
+        - Internal / maintainers only
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else did you try?
+    validations:
+      required: false
+
+  - type: input
+    id: extra
+    attributes:
+      label: Mockups / screenshots / logs
+      description: Optional, but very welcome.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmations
+      options:
+      - label: I have read the Privacy Policy (PRIVACY.md)
+        required: true
+      - label: This change would NOT cause AttachClip to send anything off-device
+        required: true
+      - label: This change would NOT cause AttachClip to mutate email
+        required: true

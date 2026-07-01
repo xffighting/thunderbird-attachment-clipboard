@@ -1,0 +1,176 @@
+# =============================================================================
+#  AttachClip for Thunderbird — Release workflow
+# =============================================================================
+# Triggered by pushing a tag matching v*. Builds the .xpi and the macOS
+# helper, attaches both to a GitHub Release draft, then publishes the
+# release once everything is green.
+#
+# Note: AMO signing is intentionally NOT in this workflow for v0.1.x —
+# we ship unsigned pre-releases via temporary add-on install until 1.0.
+# When you reach 1.0, add a step that POSTs the .xpi to AMO's addons API
+# and attaches the signed result instead of the unsigned one.
+# =============================================================================
+
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (must already exist)"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build artefacts
+    runs-on: ubuntu-latest  # extensions are platform-independent
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve tag
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pack extension
+        run: |
+          cd extension
+          zip -r ../attachclip-thunderbird-${{ steps.resolve.outputs.tag }}.xpi . \
+            -x '*.DS_Store' 'src/config.local.js'
+          cd ..
+          shasum -a 256 attachclip-thunderbird-${{ steps.resolve.outputs.tag }}.xpi \
+            | tee attachclip-thunderbird-${{ steps.resolve.outputs.tag }}.xpi.sha256
+
+      - name: Build macOS helper
+        uses: cross-platform-actions/action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # NB: We can't run swift on Linux; this job is in fact a NO-OP
+          # placeholder until we move the helper build into a separate
+          # macos-latest job.  For now the helper tarball is uploaded
+          # manually by a maintainer.
+          run_script: echo "helper build requires macOS — using pre-built artefact if present"
+
+      - name: Upload .xpi
+        uses: actions/upload-artifact@v4
+        with:
+          name: attachclip-xpi
+          path: "*.xpi*"
+
+  # ----------------------------------------------------------------------
+  #  Build the helper in parallel on a macOS runner
+  # ----------------------------------------------------------------------
+  build-helper:
+    name: Build macOS helper
+    runs-on: macos-14
+    needs: []
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve tag
+        id: resolve
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build
+        run: |
+          cd native-host/macos
+          swift build -c release --triple x86_64-apple-macosx12.0
+
+      - name: Bundle
+        run: |
+          mkdir -p dist
+          cp native-host/macos/.build/release/attachclip-host dist/attachclip-host
+          shasum -a 256 dist/attachclip-host | tee dist/attachclip-host.sha256
+          cd dist
+          tar czf attachclip-host-${{ steps.resolve.outputs.tag }}.tar.gz attachclip-host attachclip-host.sha256
+
+      - name: Upload helper tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: attachclip-helper
+          path: "dist/*.tar.gz"
+
+  # ----------------------------------------------------------------------
+  #  Publish GitHub Release draft
+  # ----------------------------------------------------------------------
+  publish:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build, build-helper]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artefacts
+
+      - name: Resolve tag
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Resolve version
+        id: version
+        run: echo "version=${TAG#v}" >> $GITHUB_OUTPUT
+        env:
+          TAG: ${{ steps.resolve.outputs.tag }}
+
+      - name: Update manifest version
+        run: |
+          python3 - <<PY
+          import json, pathlib
+          p = pathlib.Path("extension/manifest.json")
+          data = json.loads(p.read_text())
+          old = data["version"]
+          data["version"] = "${{ steps.version.outputs.version }}"
+          p.write_text(json.dumps(data, indent=2) + "\n")
+          print(f"version: {old} -> ${{ steps.version.outputs.version }}")
+          PY
+
+      - name: Create GH release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.resolve.outputs.tag }}
+          generate_release_notes: true
+          draft: true
+          prerelease: ${{ contains(steps.resolve.outputs.tag, 'alpha') || contains(steps.resolve.outputs.tag, 'beta') || contains(steps.resolve.outputs.tag, 'rc') }}
+          files: |
+            artefacts/attachclip-xpi/*.xpi
+            artefacts/attachclip-xpi/*.sha256
+            artefacts/attachclip-helper/*.tar.gz
+          body: |
+            AttachClip for Thunderbird — ${{ steps.resolve.outputs.tag }}
+
+            Read the [changelog](https://github.com/${{ github.repository }}/blob/${{ steps.resolve.outputs.tag }}/CHANGELOG.md) before upgrading.
+
+            **macOS users** — install the helper tarball or run
+            `native-host/macos/install.sh` from source.  See
+            [docs/install-macos.md](https://github.com/${{ github.repository }}/blob/${{ steps.resolve.outputs.tag }}/docs/install-macos.md).
+
+            **TB ≥ 128 users** — load the `.xpi` via `about:debugging`
+            → Load Temporary Add-on.
